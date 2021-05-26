@@ -12,17 +12,38 @@
 
 我放弃Spacemacs的原因是，它的加载速度太慢了，每次启动需要加载200多个layers，并且我不是很习惯Emacs-Lisp，相比于它，我认为vim-script要人性化太多。
 
-因此我最终选择了纯vim作为我的生产工具，并且事实证明，它的效果是不错的。下面是最终效果图：
+因此我最终选择了纯vim作为我的生产工具。下面是最终效果图：
 
 ![vim-1](vim1.png)
 
 ![vim-2](vim2.png)
 
-自从vim8引入autoload之后，vim的速度还是很不错的。至少我认为目前用纯vim8的体验还是很好的，所以没有去用Neovim。
+自从vim8引入autoload之后，vim的速度还是很不错的，所以我没有去用Neovim。如果你用的是vim8以下的版本，那么更应该去使用nvim而不是vim。
+
+以下是我使用的所有插件列表：
+
+| 插件          | 用途                                                         | 自定义快捷键                                                 |
+| ------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| fzf           | 搜索插件<br>可以代替ctrlp插件进行文件搜索<br>自带了ACK命令用于内容搜索<br>并且支持诸如Git搜索等各种强大功能 | 文件搜索：SPC s f<br>ACK搜索：SPC s g<br>行搜索：SPC s s<br>buffer搜索：SPC s b |
+| nerdtree      | vim必装的文件树插件                                          | 打开/关闭文件树：SPC t t<br>在文件树打开当前文件：SPC f f    |
+| airline       | 漂亮的vim状态栏                                              | 无                                                           |
+| auto-pairs    | 自动补全括号                                                 | 无                                                           |
+| tagbar        | 显示代码结构，需要ctags支持                                  | 打开tagbar：SPC t b                                          |
+| easy-align    | 自动对齐                                                     | 无                                                           |
+| nerdcommenter | 快速注释/取消注释插件<br>可以在visual模式选中多行进行注释    | 注释/取消注释：SPC c i                                       |
+| YouCompleteMe | 杀手级插件，代码自动补全<br>这也是安装最复杂的插件           | TAB：下一个选项<br>s-TAB：上一个选项                         |
+| vim-go        | Golang插件，更好的代码高亮<br>使用G-D进行代码跳转<br>各种Go Tool命令的支持 | 显示变量引用：SPC r r<br>自动增加Tag：SPC r t a<br>自动删除Tag：SPC r t d<br>补全结构体：SPC r f s |
+| vim-fugitive  | vim Git支持<br>支持各种Git命令                               | 显示Git Blame：SPC g b                                       |
+| vim-markdown  | Markdown支持                                                 | 无                                                           |
+| vim-bufclean  | 我自己写的一个插件<br>快速删除那些非活跃的buffer             | 清理buffer：SPC b c                                          |
+| ale           | 代码检查插件<br>快速检查error和warning<br>和airline联动在状态栏显示错误数量 | 下一个错误：SPC e n<br>上一个错误：SPC e p<br>下一个warning：SPC e w n<br>上一个warning：SPC e w p<br>显示错误列表：SPC e e<br>关闭错误列表：SPC e q |
+| vim-signature | 在状态行显示marks                                            | 无                                                           |
+
+所有插件的详细配置会在下面给出。
 
 ## 主题
 
-我使用的是[OceanicNext](https://github.com/mhartington/oceanic-next)这个主题，在上面做了一些魔改。因为原主题的GitDiff上不好看，并且没有ALE高亮的相关设置。
+我使用的是[OceanicNext](https://github.com/mhartington/oceanic-next)这个主题，在上面做了一些魔改。因为原主题的GitDiff不好看，并且没有ALE高亮的相关设置。
 
 魔改的主题在[oceanicnext.vim](oceanicnext.vim)下，将这个文件复制到`~/.vim/colors`下。
 
@@ -96,7 +117,7 @@ cnoremap help vert help
 
 ## vim-plug安装
 
-[vim-plug](https://github.com/junegunn/vim-plug)是一个高效的vim插件管理器。很多人喜欢Vundle，但是vim-plug更加高效，并且它利用了vim8的autoload，能实现异步加载插件，大大提高了vim的启动速度。
+[vim-plug](https://github.com/junegunn/vim-plug)是一个高效的vim插件管理器。很多人喜欢Vundle，但是vim-plug更加轻量，迅速。它利用了vim8的autoload，能实现异步加载插件，大大提高了vim的启动速度。
 
 使用以下命令安装：
 
@@ -105,4 +126,4 @@ curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 ```
 
-在Linux下，DNS可能遭到污染，导致`raw.githubusercontent.com`这个域名访问不了。可以直接将文件复制下来放到`~/.vim/autoload/plug.vim`即可。
+在Linux下，可能因为DNS的原因导致`raw.githubusercontent.com`这个域名访问不了。可以直接将文件复制下来放到`~/.vim/autoload/plug.vim`即可。
