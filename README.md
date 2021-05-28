@@ -220,7 +220,7 @@ call plug#end()
 
 使用以下配置设置vim主题：
 
-```vim-scipt
+```vim-script
 " 设置VIM主题
 colorscheme OceanicNext
 set background=dark
