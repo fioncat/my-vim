@@ -162,8 +162,9 @@ set laststatus=2
 
 " 开启上方的tabline功能
 let g:airline#extensions#tabline#enabled = 1
-" 显示buffer号
-let g:airline#extensions#tabline#buffer_nr_show = 1
+" 只显示buffer编号，不显示bufno
+let g:airline#extensions#tabline#buffer_nr_show = 0
+let g:airline#extensions#tabline#buffer_idx_mode = 1
 
 " ALE 显示error/warning数量
 let g:airline#extensions#ale#enabled = 1
@@ -171,6 +172,9 @@ let g:airline#extensions#ale#enabled = 1
 " 图表替换，这样底层状态栏error/warning那里可以好看一些
 let g:airline#extensions#ale#error_symbol = '✗ '
 let g:airline#extensions#ale#warning_symbol = '⚡ '
+
+nnoremap <leader>bn :bn<CR>
+nnoremap <leader>bp :bp<CR>
 " }}}
 
 " {{{ Plug 'NERDTree'
@@ -300,6 +304,13 @@ let g:go_highlight_operators = 1
 let g:go_highlight_extra_types = 1
 let g:go_highlight_methods = 1
 let g:go_highlight_generate_tags = 1
+
+" 在:w时自动进行GoImports并重新执行ALELint
+function! GoReformat()
+	call go#fmt#Format(1)
+	silent exec "ALELint"
+endfunction
+autocmd BufWriteCmd *.go call GoReformat()
 
 " 一些Go Tools
 nnoremap gat :GoAddTags<CR>
