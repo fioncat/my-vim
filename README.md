@@ -2,15 +2,15 @@
 
 作为一名Golang开发者，使用过各种编辑器/IDE，其中包括：
 
-- GoLand：啥也不说了，做过Java的应该对jetbrains的IDE有深深的情感。GoLand有JetBrains家IDE的所有特色，它不使用gopls而是用自己的language server，因此很快速，并且有着一套异常强大的工具集，调试代码非常方便。唯一的问题就是它不是免费的。
-- VsCode：目前最好用的开源编辑器之一，近几年有赶超SublimeText的趋势。插件库异常庞大，可以用无数插件堆砌成一个IDE，目前我同事最多的选择。缺点就是在使用大项目并且插件较多时会比较卡。
+- GoLand：啥也不说了，做过Java的应该对jetbrains的IDE有深深的情感。GoLand有JetBrains家IDE的所有特色，它不使用gopls而是用自己的language server，因此很快速，并且有着一套强大的工具集，调试代码非常方便。唯一的问题就是它不是免费的。
+- VsCode：目前最好用的开源编辑器之一，近几年有赶超SublimeText的趋势。插件库庞大，可以用插件堆砌成一个IDE，目前我同事最多的选择。
 - Emacs：老牌编辑器。因为不习惯Emcas-mode，所以我用的是Spacemacs的vim-mode。是我在用vim之前用的最多的编辑器。
 
-比起传统的编辑模式，vim-mode的编辑和文本处理效率是要高上不少的，因此上面的所有编辑器我无一例外都会使用vim插件。但是比起GoLand和VsCode，我还是喜欢纯Vim，Emcas这样的终端编辑器，因为它们可以让我随时快速地编辑文件和输入命令，并且可以在诸如服务器的无GUI环境运行。
+比起传统的编辑模式，vim-mode的效率是要高上不少的，因此上面的所有编辑器我无一例外都会使用vim插件。但是比起GoLand和VsCode，对于我这种喜欢在终端操作的开发者，还是更喜欢vim，emcas这样的编辑器。它们可以让我快速在终端输入命令，并且可以随时快速地打开一些项目。另外，它们可以在一些无GUI的环境（例如服务器）运行。
 
-其中，我很喜欢Spacemacs的快捷键模式，使用空格(SPC)作为leader键，快捷键采用容易记忆的简写方式配置，例如查看Git Blame使用SPC g b快捷键。我将这种快捷键配置习惯加到了vim中。
+其中，我很喜欢emacs中Spacemacs的快捷键模式，使用空格(SPC)作为leader键，快捷键采用容易记忆的简写方式配置，例如查看Git Blame使用SPC g b快捷键。我将这种快捷键配置习惯加到了vim中。
 
-我放弃Spacemacs的原因是，它的加载速度太慢了，每次启动需要加载200多个layers，并且我不是很习惯Emacs-Lisp，相比于它，我认为vim-script要人性化太多。
+我放弃Spacemacs的原因是，它的加载速度太慢了，每次启动需要加载200多个layers，并且我不是很习惯emacs-lisp，相比于它，我认为vim-script要人性化太多。
 
 因此我最终选择了纯vim作为我的生产工具。下面是最终效果图：
 
@@ -18,7 +18,7 @@
 
 ![vim-2](vim2.png)
 
-自从vim8引入异步等features之后，配合autoload，速度还是很不错的，所以我没有去用Neovim。如果你用的是vim8以下的版本，那么更应该去使用nvim而不是vim。
+自从vim8引入异步之后，速度还是很不错的，所以我没有去用Neovim。如果你用的是vim8以下的版本，那么更应该去使用nvim而不是vim。
 
 以下是我使用的所有插件列表：
 
@@ -50,7 +50,7 @@
 | 快速呼出帮助文档               | SPC h              |
 | 垂直分屏                       | SPC w /            |
 | 水平分屏                       | SPC w -            |
-| 跳转垂直分屏尺寸               | SPC w ]<br>SPC w [ |
+| 调整垂直分屏尺寸               | SPC w ]<br>SPC w [ |
 
 所有插件的详细配置会在下面给出。
 
@@ -144,7 +144,7 @@ nnoremap <leader>w] :vertical resize-3<CR>
 
 ## vim-plug安装
 
-[vim-plug](https://github.com/junegunn/vim-plug)是一个高效的vim插件管理器。很多人喜欢Vundle，但是vim-plug更加轻量，迅速。它利用了vim8的autoload，能实现异步加载插件，大大提高了vim的启动速度。
+[vim-plug](https://github.com/junegunn/vim-plug)是一个高效的vim插件管理器。很多人喜欢Vundle，但是vim-plug更加轻量，迅速。它能异步加载插件，大大提高了vim的启动速度。
 
 使用以下命令安装：
 
@@ -385,14 +385,14 @@ coc内部使用LSP作为languageserver，所以不同语言都需要安装自己
 
 Go语言(gopls)：
 
-```text
-$ go get -u golang.org/x/tools/gopls@latest
+```bash
+go install golang.org/x/tools/gopls@latest
 ```
 
 python语言(jedi)：
 
-```vim-script
-$ pip3 install jedi
+```bash
+pip3 install jedi
 ```
 
 其它语言需要自行参照文档。

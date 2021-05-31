@@ -160,6 +160,11 @@ set termguicolors
 " 显示状态栏
 set laststatus=2
 
+" 开启上方的tabline功能
+let g:airline#extensions#tabline#enabled = 1
+" 显示buffer号
+let g:airline#extensions#tabline#buffer_nr_show = 1
+
 " ALE 显示error/warning数量
 let g:airline#extensions#ale#enabled = 1
 
@@ -340,4 +345,7 @@ nnoremap <leader>sb :Buffers<CR>
 nnoremap <leader>gb :Git blame<CR>
 " }}}
 
+" {{{ Plug 'BufClean'
+nnoremap <leader>bc :BufClean<CR>
+" }}}
 
