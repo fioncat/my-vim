@@ -51,15 +51,20 @@ set noswapfile
 " 启动语法高亮
 syntax enable
 
+" 命令行的高度高一些
+set cmdheight=2
+
+" vim自带的命令行补全
+set wildmenu
+
 " Ctrl-A 跳转到当前行首，就像Emacs那样
 nnoremap <C-a> ^
 
 " :w命令时常会误输入为:W，因此这里做一个映射
 cnoreabbrev W w
 
-" 使用mark折叠，折叠功能我一般在配置文件中使用
-" 如果需要更加强大的折叠，可以安装插件
-set foldmethod=marker
+" vim文件使用marker折叠，方便快速定位配置
+autocmd FileType vim set foldmethod=marker
 " }}}
 
 " ============================= 基础快捷键 =============================
@@ -77,10 +82,6 @@ vmap <leader>xx "+xx
 
 " 帮助文档
 nnoremap <leader>h :vert help 
-
-" 打开/关闭 location list以查看ale的错误列表
-nnoremap <leader>ee :lopen<CR>
-nnoremap <leader>eq :lclose<CR>
 
 " 窗口控制快捷键
 " 垂直分屏
@@ -108,7 +109,6 @@ call plug#begin('~/.vim/plugged')
 
   " 状态栏
   Plug 'vim-airline/vim-airline'
-  Plug 'vim-airline/vim-airline-themes'
 
   " 编辑插件
   Plug 'jiangmiao/auto-pairs'
@@ -124,10 +124,6 @@ call plug#begin('~/.vim/plugged')
   " Git
   Plug 'tpope/vim-fugitive'
  
-  " Markdown支持
-  Plug 'godlygeek/tabular'
-  Plug 'plasticboy/vim-markdown'
-
   " 主题
   Plug 'fioncat/vim-oceanicnext'
 
@@ -136,10 +132,6 @@ call plug#begin('~/.vim/plugged')
 
   " vim-go的极简版，去除了gopls，以及所有coc拥有的功能
   Plug 'fioncat/vim-minigo'
-
-  " 语法检查, 没有用coc自带的是因为我觉得它更好用
-  " 并且coc支持以ale作为diagnostic组件
-  Plug 'w0rp/ale'
 
   " 在sign-line显示marks
   Plug 'kshenoy/vim-signature'
@@ -166,12 +158,9 @@ let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#buffer_nr_show = 0
 let g:airline#extensions#tabline#buffer_idx_mode = 1
 
-" ALE 显示error/warning数量
-let g:airline#extensions#ale#enabled = 1
-
 " 图表替换，这样底层状态栏error/warning那里可以好看一些
-let g:airline#extensions#ale#error_symbol = '✗ '
-let g:airline#extensions#ale#warning_symbol = '⚡ '
+let g:airline#extensions#coc#error_symbol = '✗ '
+let g:airline#extensions#coc#warning_symbol = '⚡ '
 
 nnoremap <leader>bn :bn<CR>
 nnoremap <leader>bp :bp<CR>
@@ -224,6 +213,16 @@ nnoremap <leader>tb :TagbarToggle<CR>
 " 代码补全样式，详见:help completeopt
 set completeopt=menu,menuone
 
+set hidden
+
+" 如果支持，将diagnostic signs放到原生行号中，这样就不必再显示sign
+" colume以节约空间
+if has("nvim-0.5.0") || has("patch-8.1.1564")
+  set signcolumn=number
+else
+  set signcolumn=yes
+endif
+
 " 代码补全时使用TAB和s-TAB进行快速补全
 " 这个行为和ycm的默认行为一样
 inoremap <silent><expr> <TAB>
@@ -264,34 +263,13 @@ nmap <leader>rn <Plug>(coc-rename)
 " 将选中的代码格式化
 xmap <leader>f  <Plug>(coc-format-selected)
 nmap <leader>f  <Plug>(coc-format-selected)
-" }}}
-
-" {{{ Plug 'ALE'
-" 错误高亮
-let g:ale_set_highlights = 1
-" 始终显示sign行
-let g:ale_sign_column_always = 1
-
-" sign行error/warning的标识字符
-let g:ale_sign_error = '>>'
-let g:ale_sign_warning = '>>'
-
-" 设置protobuf的根路径
-let g:ale_proto_protoc_gen_lint_options = '-I apidoc/proto'
-
-" 使用go build进行语法检查，以更加及时
-" 使用golint进行代码格式检查
-let g:ale_linters = {
-\   'go': ['go build', 'golint'],
-\}
-
-" 跳转到 下一个/上一个 错误
-nnoremap <leader>en :ALENext -error<CR>
-nnoremap <leader>ep :ALEPrevious -error<CR>
-
-" 跳转到 下一个/上一个 警告
-nnoremap <leader>wn :ALENext -warning<CR>
-nnoremap <leader>wp :ALEPrevious -warning<CR>
+" 上一个/下一个错误
+nnoremap <leader>en :call CocAction('diagnosticNext')<CR>
+nnoremap <leader>ep :call CocAction('diagnosticPrevious')<CR>
+" 打开错误列表
+nnoremap <leader>ee :CocList diagnostics<CR>
+" 代码折叠
+nnoremap <leader>fd :call CocAction('fold')<CR>
 " }}}
 
 " {{{ Plug 'mini-go'
@@ -305,10 +283,9 @@ let g:go_highlight_extra_types = 1
 let g:go_highlight_methods = 1
 let g:go_highlight_generate_tags = 1
 
-" 在:w时自动进行GoImports并重新执行ALELint
+" 在:w时自动进行GoImports并重新执行ALE
 function! GoReformat()
 	call go#fmt#Format(1)
-	silent exec "ALELint"
 endfunction
 autocmd BufWriteCmd *.go call GoReformat()
 
