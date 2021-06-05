@@ -298,10 +298,9 @@ nnoremap gfs :GoFillStruct<CR>
 " }}}
 
 " {{{ Plug 'fzf'
-" 在下方显示搜索框
-let g:fzf_layout = { 'down': '~40%' }
-" 不显示preview
-let g:fzf_preview_window = []
+" 全屏展示搜索
+let g:fzf_layout = { 'down': '~100%' }
+let g:fzf_preview_window = ['down:50%']
 
 " fzf搜索框colors配置，让其符合当前主题
 let g:fzf_colors =
@@ -319,16 +318,24 @@ let g:fzf_colors =
   \ 'spinner': ['fg', 'Label'],
   \ 'header':  ['fg', 'Comment'] }
 
-" 让ag查询不去匹配文件名，只去匹配内容
-" 详见：https://github.com/junegunn/fzf.vim/issues/346
-command! -bang -nargs=* Ag call fzf#vim#ag(<q-args>, {'options': '--delimiter : --nth 4..'}, <bang>0)
+" RG搜索, filename表示对什么文件进行搜索
+function! RGSearch(filename)
+	let command_fmt = 'rg --with-filename --column --line-number' 
+		\ . ' --no-heading --color=always --smart-case -- %s ' 
+		\ . a:filename . ' || true'
+    let initial_command = printf(command_fmt, shellescape(''))
+    let reload_command = printf(command_fmt, '{q}')
+    let spec = {'options': ['--phony', '--query', '', '--bind', 
+		\ 'change:reload:'.reload_command]}
+    call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), 0)
+endfunction
 
 " 搜索文件
 nnoremap <leader>sf :Files<CR>
 " 搜索全局内容
-nnoremap <leader>sg :Ag<CR>
+nnoremap <leader>sg :call RGSearch('')<CR>
 " 搜索当前文件内容
-nnoremap <leader>ss :Lines<CR>
+nnoremap <leader>sl :call RGSearch(fnameescape(expand('%')))<CR>
 " 搜索buffer
 nnoremap <leader>sb :Buffers<CR>
 " }}}
