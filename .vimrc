@@ -63,8 +63,9 @@ nnoremap <C-a> ^
 " :w命令时常会误输入为:W，因此这里做一个映射
 cnoreabbrev W w
 
-" vim文件使用marker折叠，方便快速定位配置
+" 部分文件使用marker折叠，方便快速定位
 autocmd FileType vim set foldmethod=marker
+autocmd FileType proto set foldmethod=marker
 " }}}
 
 " ============================= 基础快捷键 =============================
@@ -317,6 +318,10 @@ let g:fzf_colors =
   \ 'marker':  ['fg', 'Keyword'],
   \ 'spinner': ['fg', 'Label'],
   \ 'header':  ['fg', 'Comment'] }
+
+" 让ag查询不去匹配文件名，只去匹配内容
+" 详见：https://github.com/junegunn/fzf.vim/issues/346
+command! -bang -nargs=* Ag call fzf#vim#ag(<q-args>, {'options': '--delimiter : --nth 4..'}, <bang>0)
 
 " 搜索文件
 nnoremap <leader>sf :Files<CR>

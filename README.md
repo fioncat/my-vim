@@ -22,23 +22,16 @@
 
 以下是我使用的所有插件列表：
 
-| 插件            | 用途                                                         | 自定义快捷键                                                 |
-| --------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| fzf             | 搜索插件<br>可以代替ctrlp插件进行文件搜索<br>自带了ACK命令用于内容搜索<br>并且支持诸如Git搜索等各种强大功能 | 文件搜索：SPC s f<br>ACK搜索：SPC s g<br>行搜索：SPC s s<br>buffer搜索：SPC s b |
-| nerdtree        | vim必装的文件树插件                                          | 打开/关闭文件树：SPC t t<br>在文件树打开当前文件：SPC f f    |
-| airline         | 漂亮的vim状态栏                                              | 无                                                           |
-| auto-pairs      | 自动补全括号                                                 | 无                                                           |
-| tagbar          | 显示代码结构，需要ctags支持                                  | 打开tagbar：SPC t b                                          |
-| easy-align      | 自动对齐                                                     | 无                                                           |
-| nerdcommenter   | 快速注释/取消注释插件<br>可以在visual模式选中多行进行注释    | 注释/取消注释：SPC c i                                       |
-| coc.nvim        | 超好用的补全插件<br>需要node.js的支持<br>拥有自己独立的插件库<br>使用比YouCompleteMe方便很多 | 代码跳转：g d<br>显示变量引用：g r<br>显示文档：K<br>批量修改变量名：SPC r n<br>选中代码格式化：SPC f |
-| vim-minigo      | 我自己写的插件😀<br>基于[vim-go](https://github.com/fatih/vim-go)的mini版<br>删除和coc重复的功能<br>删除gopls，防止和coc一起时启动多个gopls<br>保留coc没有的go工具集 | 增加Tag：g a t<br>删除Tag：g r t<br>执行goimports：g i<br>执行fillstruct：g f s<br>待补充更多... |
-| vim-fugitive    | vim Git支持<br>支持各种Git命令                               | 显示Git Blame：SPC g b                                       |
-| vim-markdown    | Markdown支持                                                 | 无                                                           |
-| vim-bufclean    | 我自己写的插件😀<br>快速删除那些非活跃的buffer                | 清理buffer：SPC b c                                          |
-| ale             | 代码检查插件<br>快速检查error和warning<br>和airline联动在状态栏显示错误数量 | 下一个错误：SPC e n<br>上一个错误：SPC e p<br>下一个warning：SPC  w n<br>上一个warning：SPC  w p<br>显示错误列表：SPC e e<br>关闭错误列表：SPC e q |
-| vim-signature   | 在状态行显示marks                                            | 无                                                           |
-| vim-oceanicnext | 我自己写的插件😀<br/>一个好看的主题<br>基于[oceanic-next](https://github.com/mhartington/oceanic-next)的改进版<br>加入了ALE支持，优化了一些细节 | 无                                                           |
+| 插件     | 用途                                    | 自定义快捷键                                                 |
+| -------- | --------------------------------------- | ------------------------------------------------------------ |
+| airline  | 漂亮的状态栏                            | 切换到上一个buffer：SPC b n<br/>切换到下一个buffer：SPC b p  |
+| NERDTree | 文件树                                  | 打开/关闭文件树：SPC t t<br/>在文件树打开当前文件：SPC f f   |
+| TagBar   | 代码结构                                | 打开/关闭代码结构：SPC t b                                   |
+| coc.nvim | 代码补全                                | 跳转：g d<br/>显示引用：g r<br/>显示文档：K (normal mode)<br/>改名：SPC r n<br/>将代码格式化：SPC f<br/>下一个错误：SPC e n<br/>上一个错误：SPC e p<br/>错误列表：SPC e e<br/>代码折叠：SPC f d |
+| mini-go  | Golang插件，vim-go的简化版，移除了gopls | AddTags：g a t<br/>RemoveTags: g r t<br/>GoImports: g i<br/>GoFillStruct: g f s |
+| fzf      | 强大的搜索插件，可以取代ctrlp           | 搜索文件：SPC s f<br/>搜索内容：SPC s g<br>搜索文件行：SPC s s<br/>搜索buffer：SPC s b |
+| fugitive | Git插件，让vim支持执行各种git命令       | 查看当前文件的Git Blame：SPC g b                             |
+| bufclean | 一键删除那些非活跃的buffer              | 执行：SPC b c                                                |
 
 以及一些配置的其它基础快捷键：
 
