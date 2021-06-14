@@ -6,6 +6,9 @@
 set guifont=Powerline\ Consolas:h15
 set guifontwide=YaHei\ Consolas\ Hybrid:h15
 set guicursor+=a:blinkon0
+
+" 移除滚动条
+set guioptions=
 " }}}
 
 " ============================= 基础配置 =============================
@@ -38,6 +41,9 @@ set autoindent
 " vs分屏时默认在右边打开
 set splitright
 
+" split分屏默认在下方打开
+set splitbelow
+
 " 实时搜索，不必等按下<Enter>再进行搜索
 set incsearch
 
@@ -52,7 +58,7 @@ set noswapfile
 syntax enable
 
 " 命令行的高度高一些
-set cmdheight=2
+set cmdheight=1
 
 " vim自带的命令行补全
 set wildmenu
@@ -62,6 +68,9 @@ nnoremap <C-a> ^
 
 " :w命令时常会误输入为:W，因此这里做一个映射
 cnoreabbrev W w
+
+" 启用tab的indentLine(如果使用的是space，需要indentLine插件)
+" set list lcs=tab:\.\ 
 
 " 部分文件使用marker折叠，方便快速定位
 autocmd FileType vim set foldmethod=marker
@@ -75,7 +84,7 @@ autocmd FileType proto set foldmethod=marker
 let mapleader=" "
 
 " 打开内置终端
-nnoremap <leader>' :vert ter<CR>
+nnoremap <leader>' :ter<CR>
 
 " 将在Visual Mode下选中的内容复制到系统剪切板
 vmap <leader>yy "+yy
@@ -110,6 +119,7 @@ call plug#begin('~/.vim/plugged')
 
   " 状态栏
   Plug 'vim-airline/vim-airline'
+  Plug 'vim-airline/vim-airline-themes'
 
   " 编辑插件
   Plug 'jiangmiao/auto-pairs'
@@ -170,6 +180,8 @@ nnoremap <leader>bp :bp<CR>
 " {{{ Plug 'NERDTree'
 let g:NERDSpaceDelims=1
 let g:NERDTreeMinimalUI=1
+
+let g:nerdtree_tabs_open_on_gui_startup = 0
 
 " 打开文件树
 nnoremap <leader>tt :NERDTreeToggle<CR>
@@ -291,16 +303,17 @@ endfunction
 autocmd BufWriteCmd *.go call GoReformat()
 
 " 一些Go Tools
-nnoremap gat :GoAddTags<CR>
-nnoremap grt :GoRemoveTags<CR>
+nnoremap gat :GoAddTags 
+nnoremap grt :GoRemoveTags 
 nnoremap gi  :GoImports<CR>
 nnoremap gfs :GoFillStruct<CR>
 " }}}
 
 " {{{ Plug 'fzf'
 " 全屏展示搜索
-let g:fzf_layout = { 'down': '~100%' }
-let g:fzf_preview_window = ['down:50%']
+let g:fzf_layout = { 'down': '100%' }
+" 按下C-/可以打开/关闭预览窗口
+let g:fzf_preview_window = ['down:40%', 'ctrl-/']
 
 " fzf搜索框colors配置，让其符合当前主题
 let g:fzf_colors =
