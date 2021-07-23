@@ -1,7 +1,6 @@
 " ============================= VIM CONFIG FILE =============================
 " 仅适用于VIM8以及以上的版本
 " Author: Lazycat
-
 " {{{ GUI configuation
 set guifont=Powerline\ Consolas:h15
 set guifontwide=YaHei\ Consolas\ Hybrid:h15
@@ -10,9 +9,7 @@ set guicursor+=a:blinkon0
 " 移除滚动条
 set guioptions=
 " }}}
-
 " ============================= 基础配置 =============================
-
 " {{{ Basic Configuration
 " 关闭兼容模式
 set nocompatible
@@ -62,8 +59,11 @@ set cmdheight=1
 
 " vim自带的命令行补全
 set wildmenu
+set wildmode=longest,list
 
 " Ctrl-A 跳转到当前行首，就像Emacs那样
+" 重新将Ctrl-S映射为数字加1
+nnoremap <C-s> <C-a>
 nnoremap <C-a> ^
 
 " :w命令时常会误输入为:W，因此这里做一个映射
@@ -74,17 +74,14 @@ cnoreabbrev W w
 
 " 部分文件使用marker折叠，方便快速定位
 autocmd FileType vim set foldmethod=marker
+autocmd FileType vim set foldlevel=0
 autocmd FileType proto set foldmethod=marker
+autocmd FileType proto set foldlevel=0
 " }}}
-
 " ============================= 基础快捷键 =============================
-
 " {{{ Basic KeyMaps
 " SPC(Space)作为Leader，就像Spacemacs默认那样
 let mapleader=" "
-
-" 打开内置终端
-nnoremap <leader>' :ter<CR>
 
 " 将在Visual Mode下选中的内容复制到系统剪切板
 vmap <leader>yy "+yy
@@ -99,12 +96,18 @@ nnoremap <leader>w/ :vs<CR>
 " 水平分屏
 nnoremap <leader>w- :sv<CR>
 " 调整垂直分屏尺寸
-nnoremap <leader>w[ :vertical resize+3<CR>
-nnoremap <leader>w] :vertical resize-3<CR>
+nnoremap <C-w>[ :vertical resize+3<CR>
+nnoremap <C-w>] :vertical resize-3<CR>
+
+" 打开内置终端
+nnoremap <leader>' :ter<CR>
+nnoremap <leader>" :vert ter<CR>
+" 在内置Terminal中，按下C-N进入普通模式，以滚动或复制文本
+tnoremap <C-N> <C-\><C-N>
+" 在内置Ternimal按下C-Q直接退出
+tnoremap <C-Q> exit<CR>
 " }}}
-
 " ============================= 插件列表 =============================
-
 " {{{ plugs
 call plug#begin('~/.vim/plugged')
 
@@ -147,19 +150,30 @@ call plug#begin('~/.vim/plugged')
   " 在sign-line显示marks
   Plug 'kshenoy/vim-signature'
 
+  " 翻译插件
+  Plug 'voldikss/vim-translator'
+
+  " 快速给内容增加成对的surroundings字符
+  Plug 'tpope/vim-surround'
+
+  " Golang 调试插件 - Delve
+  Plug 'sebdah/vim-delve'
+
+  " YAML 折叠
+  Plug 'fioncat/vim-yaml-folds'
+
 call plug#end()
 " }}}
-
 " ============================= 插件配置 =============================
-
 " {{{ Theme
+" autocmd vimenter * hi Normal guibg=NONE ctermbg=NONE
+" autocmd vimenter * hi EndOfBuffer guibg=NONE ctermbg=NONE
 " 设置VIM主题
 colorscheme OceanicNext
 set background=dark
 set termguicolors
 " }}}
-
-" {{{ plug 'Airline'
+" {{{ Airline
 " 显示状态栏
 set laststatus=2
 
@@ -173,11 +187,12 @@ let g:airline#extensions#tabline#buffer_idx_mode = 1
 let g:airline#extensions#coc#error_symbol = '✗ '
 let g:airline#extensions#coc#warning_symbol = '⚡ '
 
+let g:airline_powerline_fonts = 1
+
 nnoremap <leader>bn :bn<CR>
 nnoremap <leader>bp :bp<CR>
 " }}}
-
-" {{{ Plug 'NERDTree'
+" {{{ NERDTree
 let g:NERDSpaceDelims=1
 let g:NERDTreeMinimalUI=1
 
@@ -188,8 +203,7 @@ nnoremap <leader>tt :NERDTreeToggle<CR>
 " 在文件树打开当前文件
 nnoremap <leader>ff :NERDTreeFind<CR>
 " }}}
-
-" {{{ Plug 'Tag Bar'
+" {{{ Tag Bar
 " tagbar Golang支持
 let g:tagbar_type_go = {
     \ 'ctagstype' : 'go',
@@ -221,8 +235,7 @@ let g:tagbar_type_go = {
 " 打开tagbar
 nnoremap <leader>tb :TagbarToggle<CR>
 " }}}
-
-" {{{ Plug 'Coc'
+" {{{ Coc
 " 代码补全样式，详见:help completeopt
 set completeopt=menu,menuone
 
@@ -248,10 +261,11 @@ function! s:check_back_space() abort
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
-" <Enter> 选择补全项
+" <Enter> 快速选择补全项
 inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
                               \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
+" 展示光标所在处的文档
 function! s:show_documentation()
   if (index(['vim','help'], &filetype) >= 0)
     execute 'h '.expand('<cword>')
@@ -284,8 +298,7 @@ nnoremap <leader>ee :CocList diagnostics<CR>
 " 代码折叠
 nnoremap <leader>fd :call CocAction('fold')<CR>
 " }}}
-
-" {{{ Plug 'mini-go'
+" {{{ mini-go
 " Go语法高亮
 let g:go_highlight_types = 1
 let g:go_highlight_fields = 1
@@ -296,11 +309,13 @@ let g:go_highlight_extra_types = 1
 let g:go_highlight_methods = 1
 let g:go_highlight_generate_tags = 1
 
-" 在:w时自动进行GoImports并重新执行ALE
-function! GoReformat()
-	call go#fmt#Format(1)
-endfunction
-autocmd BufWriteCmd *.go call GoReformat()
+" 在:w时自动进行GoImports并重新执行GoFmt
+autocmd BufWriteCmd *.go call go#fmt#Format(1)
+
+" 代码块折叠功能
+autocmd FileType go call go#config#FoldEnable()
+autocmd FileType go setlocal foldmethod=syntax
+autocmd FileType go setlocal foldlevel=99  " 启动时不进行折叠，需要手动触发
 
 " 一些Go Tools
 nnoremap gat :GoAddTags 
@@ -308,12 +323,11 @@ nnoremap grt :GoRemoveTags
 nnoremap gi  :GoImports<CR>
 nnoremap gfs :GoFillStruct<CR>
 " }}}
-
-" {{{ Plug 'fzf'
-" 全屏展示搜索
-let g:fzf_layout = { 'down': '100%' }
+" {{{ fzf
+let g:fzf_layout = { 'down': '50%' }
 " 按下C-/可以打开/关闭预览窗口
-let g:fzf_preview_window = ['down:40%', 'ctrl-/']
+" let g:fzf_preview_window = ['down:40%', 'ctrl-/']
+let g:fzf_preview_window = []
 
 " fzf搜索框colors配置，让其符合当前主题
 let g:fzf_colors =
@@ -345,6 +359,8 @@ endfunction
 
 " 搜索文件
 nnoremap <leader>sf :Files<CR>
+" 搜索当前buffer目录下的文件
+nnoremap <leader>ss :call fzf#vim#files(expand('%:p:h'), fzf#vim#with_preview(), 0)<CR>
 " 搜索全局内容
 nnoremap <leader>sg :call RGSearch('')<CR>
 " 搜索当前文件内容
@@ -352,13 +368,20 @@ nnoremap <leader>sl :call RGSearch(fnameescape(expand('%')))<CR>
 " 搜索buffer
 nnoremap <leader>sb :Buffers<CR>
 " }}}
-
-" {{{ Plug 'Git'
+" {{{ Git
 " 打开Git Blame
 nnoremap <leader>gb :Git blame<CR>
 " }}}
-
-" {{{ Plug 'BufClean'
+" {{{ BufClean
 nnoremap <leader>bc :BufClean<CR>
 " }}}
-
+" {{{ translator
+vmap <silent> <leader>tw <Plug>TranslateWV
+" }}}
+" {{{ Delve-go
+autocmd FileType go nnoremap <leader>db :DlvToggleBreakpoint<CR>
+autocmd FileType go nnoremap <leader>dr :DlvToggleTracepoint<CR>
+autocmd FileType go nnoremap <leader>dc :DlvClearAll<CR>
+autocmd FileType go nnoremap <leader>dd :DlvDebug -- 
+autocmd FileType go nnoremap <leader>dt :DlvTest -- -test.run  
+" }}}
