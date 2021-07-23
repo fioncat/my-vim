@@ -1,461 +1,117 @@
-# vim日记
-
-作为一名Golang开发者，使用过各种编辑器/IDE，其中包括：
-
-- GoLand：啥也不说了，做过Java的应该对jetbrains的IDE有深深的情感。GoLand有JetBrains家IDE的所有特色，它不使用gopls而是用自己的language server，因此很快速，并且有着一套强大的工具集，调试代码非常方便。唯一的问题就是它不是免费的。
-- VsCode：目前最好用的开源编辑器之一，近几年有赶超SublimeText的趋势。插件库庞大，可以用插件堆砌成一个IDE，目前我同事最多的选择。
-- Emacs：老牌编辑器。因为不习惯Emcas-mode，所以我用的是Spacemacs的vim-mode。是我在用vim之前用的最多的编辑器。
-
-比起传统的编辑模式，vim-mode的效率是要高上不少的，因此上面的所有编辑器我无一例外都会使用vim插件。但是比起GoLand和VsCode，对于我这种喜欢在终端操作的开发者，还是更喜欢vim，emcas这样的编辑器。它们可以让我快速在终端输入命令，并且可以随时快速地打开一些项目。另外，它们可以在一些无GUI的环境（例如服务器）运行。
-
-其中，我很喜欢emacs中Spacemacs的快捷键模式，使用空格(SPC)作为leader键，快捷键采用容易记忆的简写方式配置，例如查看Git Blame使用SPC g b快捷键。我将这种快捷键配置习惯加到了vim中。
-
-我放弃Spacemacs的原因是，它的加载速度太慢了，每次启动需要加载200多个layers，并且我不是很习惯emacs-lisp，相比于它，我认为vim-script要人性化太多。
-
-因此我最终选择了纯vim作为我的生产工具。下面是最终效果图：
-
-![vim-1](vim1.png)
-
-![vim-2](vim2.png)
-
-自从vim8引入异步之后，速度还是很不错的，所以我没有去用Neovim。如果你用的是vim8以下的版本，那么更应该去使用nvim而不是vim。
-
-以下是我使用的所有插件列表：
-
-| 插件     | 用途                                    | 自定义快捷键                                                 |
-| -------- | --------------------------------------- | ------------------------------------------------------------ |
-| airline  | 漂亮的状态栏                            | 切换到上一个buffer：SPC b n<br/>切换到下一个buffer：SPC b p  |
-| NERDTree | 文件树                                  | 打开/关闭文件树：SPC t t<br/>在文件树打开当前文件：SPC f f   |
-| TagBar   | 代码结构                                | 打开/关闭代码结构：SPC t b                                   |
-| coc.nvim | 代码补全                                | 跳转：g d<br/>显示引用：g r<br/>显示文档：K (normal mode)<br/>改名：SPC r n<br/>将代码格式化：SPC f<br/>下一个错误：SPC e n<br/>上一个错误：SPC e p<br/>错误列表：SPC e e<br/>代码折叠：SPC f d |
-| mini-go  | Golang插件，vim-go的简化版，移除了gopls | AddTags：g a t<br/>RemoveTags: g r t<br/>GoImports: g i<br/>GoFillStruct: g f s |
-| fzf      | 强大的搜索插件，可以取代ctrlp           | 搜索文件：SPC s f<br/>搜索内容：SPC s g<br>搜索文件行：SPC s s<br/>搜索buffer：SPC s b |
-| fugitive | Git插件，让vim支持执行各种git命令       | 查看当前文件的Git Blame：SPC g b                             |
-| bufclean | 一键删除那些非活跃的buffer              | 执行：SPC b c                                                |
-
-以及一些配置的其它基础快捷键：
-
-| 操作                           | 快捷键             |
-| ------------------------------ | ------------------ |
-| 打开内置终端                   | SPC '              |
-| 在Visual下复制内容到系统剪切板 | SPC y y            |
-| 在Visual下剪切内容到系统剪切板 | SPC x x            |
-| 快速呼出帮助文档               | SPC h              |
-| 垂直分屏                       | SPC w /            |
-| 水平分屏                       | SPC w -            |
-| 调整垂直分屏尺寸               | SPC w ]<br>SPC w [ |
-
-所有插件的详细配置会在下面给出。
-
-## 基础配置
-
-以下是一些基本的配置。
-
-```vim-script
-" 关闭兼容模式
-set nocompatible
-
-" 让退格符在插入模式下能够删除前一个字符，就像一般的编辑器那样
-set backspace=indent,eol,start
-
-" utf-8编码，在一些插件下要求这个配置
-set encoding=UTF-8
-
-" 显示相对行号
-set number relativenumber
-
-" 突出显示当前行
-set cursorline
-
-" 突出显示搜索匹配项
-set showmatch
-
-" tab相关配置 - tab占用4spaces
-set ts=4
-set shiftwidth=4
-" 自动对齐
-set autoindent
-
-" vs分屏时默认在右边打开
-set splitright
-
-" 实时搜索，不必等按下<Enter>再进行搜索
-set incsearch
-
-" 搜索忽略大小写
-set ignorecase
-
-" 不允许生成swp文件，这些文件用于异常中断时的恢复
-" 如果需要这个功能，注释掉这个配置即可
-set noswapfile
-
-" 启动语法高亮
-syntax enable
-
-" Ctrl-A 跳转到当前行首，就像Emacs那样
-nnoremap <C-a> ^
-
-" :w命令时常会误输入为:W，因此这里做一个映射
-cnoreabbrev W w
-
-" 使用mark折叠，折叠功能我一般在配置文件中使用
-" 如果需要更加强大的折叠，可以安装插件
-set foldmethod=marker
-```
-
-## 快捷键基础配置
-
-以下快捷键不依赖任何插件，所以我单独拿出来进行配置：
-
-```vim-script
-" SPC(Space)作为Leader，就像Spacemacs默认那样
-let mapleader=" "
-
-" 打开内置终端
-nnoremap <leader>' :vert ter<CR>
-
-" 将在Visual Mode下选中的内容复制到系统剪切板
-vmap <leader>yy "+yy
-vmap <leader>xx "+xx
-
-" 帮助文档
-nnoremap <leader>h :vert help 
-
-" 打开/关闭 location list以查看ale的错误列表
-nnoremap <leader>ee :lopen<CR>
-nnoremap <leader>eq :lclose<CR>
-
-" 窗口控制快捷键
-" 垂直分屏
-nnoremap <leader>w/ :vs<CR>
-" 水平分屏
-nnoremap <leader>w- :sv<CR>
-" 调整垂直分屏尺寸
-nnoremap <leader>w[ :vertical resize+3<CR>
-nnoremap <leader>w] :vertical resize-3<CR>
-```
-
-## vim-plug安装
-
-[vim-plug](https://github.com/junegunn/vim-plug)是一个高效的vim插件管理器。很多人喜欢Vundle，但是vim-plug更加轻量，迅速。它能异步加载插件，大大提高了vim的启动速度。
-
-使用以下命令安装：
-
-```text
-curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
-    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-```
-
-在Linux下，可能因为DNS的原因导致`raw.githubusercontent.com`这个域名访问不了。可以直接将文件复制下来放到`~/.vim/autoload/plug.vim`即可。
-
-## 插件配置
-
-安装好vim-plug之后，将所有插件列表加到配置中：
-
-```vim-script
-call plug#begin('~/.vim/plugged')
-
-  " 搜索插件
-  Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-  Plug 'junegunn/fzf.vim'
-
-  " 文件树
-  Plug 'scrooloose/nerdtree'
-  Plug 'Xuyuanp/nerdtree-git-plugin'
-  Plug 'jistr/vim-nerdtree-tabs'
-
-  " 状态栏
-  Plug 'vim-airline/vim-airline'
-  Plug 'vim-airline/vim-airline-themes'
-
-  " 编辑插件
-  Plug 'jiangmiao/auto-pairs'
-  Plug 'majutsushi/tagbar'
-  Plug 'junegunn/vim-easy-align'
-
-  " 快速注释
-  Plug 'scrooloose/nerdcommenter'
-
-  " 代码补全
-  Plug 'neoclide/coc.nvim', {'branch': 'release'}
-
-  " Git
-  Plug 'tpope/vim-fugitive'
- 
-  " Markdown支持
-  Plug 'godlygeek/tabular'
-  Plug 'plasticboy/vim-markdown'
-
-  " 主题
-  Plug 'fioncat/vim-oceanicnext'
-
-  " 快速清除buffer
-  Plug 'fioncat/vim-bufclean'
-
-  " vim-go的极简版，去除了gopls，以及所有coc拥有的功能
-  Plug 'fioncat/vim-minigo'
-
-  " 语法检查, 没有用coc自带的是因为我觉得它更好用
-  " 并且coc支持以ale作为diagnostic组件
-  Plug 'w0rp/ale'
-
-  " 在sign-line显示marks
-  Plug 'kshenoy/vim-signature'
-
-call plug#end()
-```
-
-随后重启vim，输入`:PlugInstall`即可进行安装。
-
-随后，针对不同的插件有一些不同的个性化配置，需要在插件列表的后面加上。
-
-### oceanicnext主题
-
-使用以下配置设置vim主题：
-
-```vim-script
-" 设置VIM主题
-colorscheme OceanicNext
-set background=dark
-set termguicolors
-```
-
-### Airline
-
-一个状态栏插件，可以和ALE联动实现在状态栏实时展示代码的error和warning数量。
-
-oceanicnext主题里面自带了airline插件，因此vim启动时airline会自动使用oceanicnext的主题。
-
-```vim-script
-" 显示状态栏
-set laststatus=2
-
-" ALE 显示error/warning数量
-let g:airline#extensions#ale#enabled = 1
-
-" 图表替换，这样底层状态栏error/warning那里可以好看一些
-let g:airline#extensions#ale#error_symbol = '✗ '
-let g:airline#extensions#ale#warning_symbol = '⚡ '
-```
-
-### NERDTree
-
-一个vim必装的文件树插件。配置如下：
-
-```vim-script
-let g:NERDSpaceDelims=1
-let g:NERDTreeMinimalUI=1
-
-" 打开文件树
-nnoremap <leader>tt :NERDTreeToggle<CR>
-" 在文件树打开当前文件
-nnoremap <leader>ff :NERDTreeFind<CR>
-```
-
-### tagbar
-
-这个插件可以展示当前代码的整体结构，并进行快速跳转。需要ctags的支持：
-
-```text
-$ brew install ctags
-```
-
-配置如下：
-
-```vim-script
-let g:tagbar_type_go = {
-    \ 'ctagstype' : 'go',
-    \ 'kinds'     : [
-        \ 'p:package',
-        \ 'i:imports:1',
-        \ 'c:constants',
-        \ 'v:variables',
-        \ 't:types',
-        \ 'n:interfaces',
-        \ 'w:fields',
-        \ 'e:embedded',
-        \ 'm:methods',
-        \ 'r:constructor',
-        \ 'f:functions'
-    \ ],
-    \ 'sro' : '.',
-    \ 'kind2scope' : {
-        \ 't' : 'ctype',
-        \ 'n' : 'ntype'
-    \ },
-    \ 'scope2kind' : {
-        \ 'ctype' : 't',
-        \ 'ntype' : 'n'
-    \ },
-    \ 'ctagsbin'  : 'gotags',
-    \ 'ctagsargs' : '-sort -silent'
-\ }
-" 打开tagbar
-nnoremap <leader>tb :TagbarToggle<CR>
-```
-
-### coc.nvim
-
-一个比较新的补全插件，我曾经也是使用YouCompleteMe的，但是coc的功能和使用实在比ycm好很多。coc有自己的插件库，采用类似VsCode的插件管理方式，在独立的json文件中配置插件，并使用`:CocInstall`单独安装插件。
-
-coc需要node.js的支持，可以到官网下载对应系统的安装包进行安装，安装后输入以下命令查看版本：
-
-```text
-$ node -v
-v14.17.0
-```
-
-coc需要10.12以上的node版本。
-
-在`.vimrc`中，coc的配置如下：
-
-```vim-script
-" 代码补全样式，详见:help completeopt
-set completeopt=menu,menuone
-
-" 代码补全时使用TAB和s-TAB进行快速补全
-" 这个行为和ycm的默认行为一样
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-
-" <Enter> 选择补全项
-inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
-                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
-
-function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  elseif (coc#rpc#ready())
-    call CocActionAsync('doHover')
-  else
-    execute '!' . &keywordprg . " " . expand('<cword>')
-  endif
-endfunction
-
-" 高亮展示光标悬浮的引用
-autocmd CursorHold * silent call CocActionAsync('highlight')
-
-" GD - 代码跳转
-nmap <silent> gd <Plug>(coc-definition)
-" GR - 显示变量引用
-nmap <silent> gr <Plug>(coc-references)
-" K：展示文档
-nnoremap <silent> K :call <SID>show_documentation()<CR>
-" 变量改名
-nmap <leader>rn <Plug>(coc-rename)
-" 将选中的代码格式化
-xmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
-```
-
-除此之外，coc还需要单独配置，输入`:CocConfig`打开配置文件，输入：
+# my-vim profile
+
+适用于日常Go开发的vim，支持自动补全，语法检查，跳转，文档查看，调试等功能。
+
+**仅适用于vim8以及以上的版本，下面的版本请去用neovim**
+
+## Plugins
+
+使用[vim-plug](https://github.com/junegunn/vim-plug)管理插件，它比Vundle更快，更轻量。
+
+以下是所有的插件列表
+
+插件|说明|依赖
+----|----|----
+[fzf](https://github.com/junegunn/fzf.vim)|强大的搜索插件，可以完全替代ctrlp|fzf和rg命令
+[nerdtree](https://github.com/scrooloose/nerdtree)|文件树|
+[vim-airline](https://github.com/vim-airline/vim-airline)|强大的状态栏|需要Patched字体，我用的是：[Source Code Pro](https://github.com/powerline/fonts/tree/master/SourceCodePro)
+[auto-pairs](https://github.com/jiangmiao/auto-pairs)|自动补全/删除括号|
+[tagbar](https://github.com/majutsushi/tagbar)|显示代码结构|需要安装ctags
+[vim-easy-align](https://github.com/junegunn/vim-easy-align)|快速对齐
+[nerdcommenter](https://github.com/scrooloose/nerdcommenter)|快速注释
+[coc.nvim](https://github.com/neoclide/coc.nvim)|强大的补全插件，可以完全替代ycm|需要安装[nodejs](https://nodejs.org/en/download/)
+[vim-fugitive](https://github.com/tpope/vim-fugitive)|Git支持|
+[vim-oceanicnext](https://github.com/fioncat/vim-oceanicnext)|颜色主题|
+[vim-bufclean](https://github.com/fioncat/vim-bufclean)|快速清除buffers|
+[vim-minigo](https://github.com/fioncat/vim-minigo)|Golang支持，[vim-go](https://github.com/fatih/vim-go)的极简版|需要go tools
+[vim-signature](https://github.com/kshenoy/vim-signature)|可视化mark|
+[vim-translator](https://github.com/voldikss/vim-translator)|即时翻译，英语渣阅读英文文档必备|
+[vim-surround](https://github.com/tpope/vim-surround)|快速增加围绕字符，例如括号或xml tag
+[vim-delve](https://github.com/sebdah/vim-delve)|Golang调试插件|需要[delve](https://github.com/go-delve/delve)
+[vim-yaml-folds](https://github.com/fioncat/vim-yaml-folds)|yaml文件折叠
+
+## Hot keys
+
+以下不包括vim本身的快捷键，如果我对vim自带快捷键做了魔改，则会列出。下表中{leader}表示Leader Key，{C}表示Ctrl键位，其余表示正常键位，区分大小写。
+
+我用空格(Space)作为Leader Key，类似于[SpaceVim](https://github.com/SpaceVim/SpaceVim)和[SpaceEmacs](https://github.com/syl20bnr/spacemacs)。
+
+快捷键|Mode|说明
+-----|-----|---
+{leader}yy|Visual|将选中内容复制到系统剪切板
+{leader}xx|Visual|将选中内容剪切到系统剪切板
+{leader}h|Normal|查看vim帮助文档
+{leader}w/|Normal|垂直拆分窗口
+{leader}w-|Normal|水平拆分窗口
+{leader}w[|Normal|微调垂直窗口尺寸
+{leader}w]|Normal|微调垂直窗口尺寸(反方向)
+{leader}'|Normal|在下方打开内置终端
+{leader}"|Normal|在右方打开内置终端
+{C}n|Terminal|在内置终端中进入普通模式，以滚动或复制文本
+{C}q|Terminal|退出内置终端
+{C}s|Normal|光标所在数字加1(原来是{C}a)
+{C}a|Normal|回到行首，等同于按下^
+{leader}bn|Normal|跳转到下一个buffer
+{leader}bp|Normal|跳转到上一个buffer
+{leader}tt|Normal|打开/关闭文件树
+{leader}ff|Normal|在文件树打开当前文件
+{leader}tb|Normal|打开代码结构(tagbar)
+gd|Normal|跳转到定义
+gr|Normal|显示引用
+K|Normal|查看文档(如果有)
+{leader}rn|Normal|批量改名
+{leader}f|Visual|选中代码格式化
+{leader}en|Normal|跳转到下一个错误
+{leader}ep|Normal|跳转到上一个错误
+{leader}fd|Normal|启用代码折叠
+gat|Normal|Go快速增加tags
+grt|Normal|Go快速移除tags
+gfs|Normal|Go快速补全结构体
+{leader}sf|Normal|搜索文件
+{leader}ss|Normal|搜索当前目录下的文件
+{leader}sg|Normal|Rg搜索全局内容
+{leader}sl|Normal|Rg搜索当前文件内容
+{leader}sb|Normal|搜索buffers
+{leader}gb|Normal|打开Git Blame
+{leader}bc|Normal|快速清理不用的buffer
+{leader}tw|Visual|翻译选中的英文为中文
+{leader}db|Normal|Go增加/移除调试断点
+{leader}dr|Normal|Go增加/移除调试tracepoint
+{leader}dc|Normal|Go移除所有调试断点
+{leader}dd|Normal|Go开始debug
+{leader}dt|Normal|Go test debug
+
+## Languages
+
+对于vim支持的所有编程语言功能，全部由coc.nvim实现好了，我们只需要简单配置以下即可使用。在[coc.nvim language servers](https://github.com/neoclide/coc.nvim/wiki/Language-servers)下有完整的语言支持和配置说明。下面是我用到的一些语言的配置过程。
+
+在`CocConig`中加入以下配置：
 
 ```json
 {
-  "diagnostic.displayByAle": true,
-
-  "languageserver": {
-    "go": {
-      "command": "gopls",
-      "rootPatterns": ["go.mod"],
-      "trace.server": "verbose",
-      "filetypes": ["go"]
-    }
-  }
+  "diagnostic.warningSign": ">>",
+  "diagnostic.refreshOnInsertMode": true,
+  "diagnostic.virtualText": true
 }
 ```
 
-因为日常开发还用到了Python，所以还需要安装Python的插件：`:CocInstall coc-python`。
+### Golang
 
-coc内部使用LSP作为languageserver，所以不同语言都需要安装自己的LSP支持：
-
-Go语言(gopls)：
+需要gopls的支持，安装gopls：
 
 ```bash
-go install golang.org/x/tools/gopls@latest
+$ go install golang.org/x/tools/gopls@latest
 ```
 
-python语言(jedi)：
-
-```bash
-pip3 install jedi
-```
-
-其它语言需要自行参照文档。
-
-### ALE
-
-ALE是一个用于代码检查的插件。coc可以使用ALE作为代码检查器（我在coc中已经配置好了）。
-
-ALE的配置如下：
-
-```vim-script
-" 错误高亮
-let g:ale_set_highlights = 1
-" 始终显示sign行
-let g:ale_sign_column_always = 1
-
-" sign行error/warning的标识字符
-let g:ale_sign_error = '>>'
-let g:ale_sign_warning = '>>'
-
-" 设置protobuf的根路径
-let g:ale_proto_protoc_gen_lint_options = '-I apidoc/proto'
-
-" 使用go build进行语法检查，以更加及时
-" 使用golint进行代码格式检查
-let g:ale_linters = {
-\   'go': ['go build', 'golint'],
-\}
-
-" 跳转到 下一个/上一个 错误
-nnoremap <leader>en :ALENext -error<CR>
-nnoremap <leader>ep :ALEPrevious -error<CR>
-
-" 跳转到 下一个/上一个 警告
-nnoremap <leader>wn :ALENext -warning<CR>
-nnoremap <leader>wp :ALEPrevious -warning<CR>
-```
-
-### mini-go
-
-本来我是直接用[vim-go](https://github.com/fatih/vim-go)。后来发现这个插件和coc一起使用时存在一些问题：
-
-- vim-go和coc都会启动自己的gopls，导致有多个gopls同时运行，vim资源占用高。
-- vim-go有一些功能，例如代码检查，跳转等在coc中已经提供了，二者一起使用时显得有点多余。
-
-因此我基于原来的vim-go进行了很多删改，删去了大量gopls相关脚本，仅保留了一些coc缺失的功能，例如`GoAddTag`，`GoFillStruct`等。并且保留了Go语言语法高亮。
-
-配置如下：
-
-```vim-script
-" Go语法高亮
-let g:go_highlight_types = 1
-let g:go_highlight_fields = 1
-let g:go_highlight_functions = 1
-let g:go_highlight_function_calls = 1
-let g:go_highlight_operators = 1
-let g:go_highlight_extra_types = 1
-let g:go_highlight_methods = 1
-let g:go_highlight_generate_tags = 1
-
-" 一些Go Tools
-nnoremap gat :GoAddTags<CR>
-nnoremap grt :GoRemoveTags<CR>
-nnoremap gi  :GoImports<CR>
-nnoremap gfs :GoFillStruct<CR>
-```
-
-Go tools需要单独安装一些二进制程序：
+在coc.nvim中安装插件：
 
 ```text
+:CocInstall coc-go
+```
+
+一些功能需要go tools的支持，完整列表如下：
+
+```bash
 go install github.com/klauspost/asmfmt/cmd/asmfmt@latest
 go install github.com/go-delve/delve/cmd/dlv@latest
 go install github.com/kisielk/errcheck@latest
@@ -474,55 +130,22 @@ go install github.com/fatih/motion@latest
 go install github.com/koron/iferr@latest
 ```
 
-### fzf
+### Python
 
-fzf是一个强大的搜索插件，可以替代`ctrlp`使用。并且支持各种维度的搜索。
-
-fzf本身是一个用Go写的命令行程序，官方做了一个vim插件以方便在vim内部执行各种搜索命令。在mac/Linux下可以先单独安装fzf命令：
-
-```text
-$ brew install fzf
-```
-
-可以让fzf命令配合vim以实现快速搜索并打开文件：
+需要jedi的支持，直接用pip安装即可：
 
 ```bash
-alias fvim='vim $(fzf --bind=tab:preview-down,btab:preview-up)'
+$ pip3 install jedi
 ```
 
-将这个语句加到shell profile（例如`.bashrc`， `.zshrc`）中，可以使用fvim实现搜索并用vim打开文件。
+在coc.nvim中安装插件：
 
-在vim中，对fzf进行如下配置：
-
-```vim-script
-" 在下方显示搜索框
-let g:fzf_layout = { 'down': '~40%' }
-" 不显示preview
-let g:fzf_preview_window = []
-
-" fzf搜索框colors配置，让其符合当前主题
-let g:fzf_colors =
-\ { 'fg':      ['fg', 'Normal'],
-  \ 'bg':      ['bg', 'Normal'],
-  \ 'hl':      ['fg', 'Function'],
-  \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
-  \ 'bg+':     ['bg', 'Visual', 'CursorColumn'],
-  \ 'hl+':     ['fg', 'Statement'],
-  \ 'info':    ['fg', 'PreProc'],
-  \ 'border':  ['fg', 'Ignore'],
-  \ 'prompt':  ['fg', 'Conditional'],
-  \ 'pointer': ['fg', 'Exception'],
-  \ 'marker':  ['fg', 'Keyword'],
-  \ 'spinner': ['fg', 'Label'],
-  \ 'header':  ['fg', 'Comment'] }
-
-" 搜索文件
-nnoremap <leader>sf :Files<CR>
-" 搜索全局内容
-nnoremap <leader>sg :Ag<CR>
-" 搜索当前文件内容
-nnoremap <leader>ss :Lines<CR>
-" 搜索buffer
-nnoremap <leader>sb :Buffers<CR>
+```text
+:CocInstall coc-python
 ```
 
+### Rust
+
+### Lua
+
+### C/C++
