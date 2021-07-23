@@ -1,4 +1,4 @@
-# my-vim profile
+# My vim profile
 
 适用于日常Go开发的vim，支持自动补全，语法检查，跳转，文档查看，调试等功能。
 
@@ -146,6 +146,30 @@ $ pip3 install jedi
 
 ### Rust
 
+需要安装rust-src：
+
+```bash
+$ rustup component add rust-src
+```
+
+另外要安装Rust对于LSP的支持，即rust-analyzer。这个可以手动安装，或是由coc.nvim自动完成安装。
+
+我们先安装coc.nvim插件：
+
+```text
+:CocInstall coc-rust-analyzer
+```
+
+随后，随意打开一个rust文件(以".rs"作为后缀)，coc.nvim会问你是否要安装rust-analyzer，选择Yes即可自动完成安装。
+
+安装好之后需要一定时间构建索引，补全才能正常使用。
+
 ### Lua
 
-### C/C++
+直接安装插件：
+
+```text
+:CocInstall coc-lua
+```
+
+这里安装过程比较长，用到的是[lua-language-server](https://github.com/sumneko/lua-language-server)。
