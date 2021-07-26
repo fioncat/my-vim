@@ -19,7 +19,7 @@
 [tagbar](https://github.com/majutsushi/tagbar)|显示代码结构|需要安装ctags
 [vim-easy-align](https://github.com/junegunn/vim-easy-align)|快速对齐
 [nerdcommenter](https://github.com/scrooloose/nerdcommenter)|快速注释
-[coc.nvim](https://github.com/neoclide/coc.nvim)|强大的补全插件，可以完全替代ycm|需要安装[nodejs](https://nodejs.org/en/download/)
+[coc.nvim](https://github.com/neoclide/coc.nvim)|强大的语言插件，可以完全替代烦人的ycm|需要安装[nodejs](https://nodejs.org/en/download/)
 [vim-fugitive](https://github.com/tpope/vim-fugitive)|Git支持|
 [vim-oceanicnext](https://github.com/fioncat/vim-oceanicnext)|颜色主题|
 [vim-bufclean](https://github.com/fioncat/vim-bufclean)|快速清除buffers|
