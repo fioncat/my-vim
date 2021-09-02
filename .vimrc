@@ -32,6 +32,8 @@ set showmatch
 " tab相关配置 - tab占用4spaces
 set ts=4
 set shiftwidth=4
+" 如果开启这个选项，那么会用space替代tab插入
+" set expandtab
 " 自动对齐
 set autoindent
 
@@ -61,6 +63,13 @@ set cmdheight=1
 set wildmenu
 set wildmode=longest,list
 
+" 当buffer中的文件在磁盘有变更时，自动刷新buffer而不用
+" 每次都询问一遍
+set autoread
+
+" 关闭响铃
+set noeb vb t_vb=
+
 " Ctrl-A 跳转到当前行首，就像Emacs那样
 " 重新将Ctrl-S映射为数字加1
 nnoremap <C-s> <C-a>
@@ -77,6 +86,27 @@ autocmd FileType vim set foldmethod=marker
 autocmd FileType vim set foldlevel=0
 autocmd FileType proto set foldmethod=marker
 autocmd FileType proto set foldlevel=0
+
+autocmd FileType json set filetype=json
+autocmd FileType json set foldmethod=syntax
+autocmd FileType json set foldlevel=99
+" JSON 文件tab为2个空格
+autocmd FileType json set tabstop=2
+autocmd FileType json set shiftwidth=2
+autocmd FileType json set expandtab
+
+" 解决按下ESC延时进入InsertMode的问题
+set ttimeout
+set ttimeoutlen=0
+
+" 在Insert模式下，光标显示为长条
+let &t_SI = "\e[6 q"
+let &t_EI = "\e[2 q"
+augroup myCmds
+au!
+autocmd VimEnter * silent !echo -ne "\e[2 q"
+augroup END
+
 " }}}
 " ============================= 基础快捷键 =============================
 " {{{ Basic KeyMaps
@@ -84,8 +114,9 @@ autocmd FileType proto set foldlevel=0
 let mapleader=" "
 
 " 将在Visual Mode下选中的内容复制到系统剪切板
-vmap <leader>yy "+yy
+" vmap <leader>yy "+yy
 vmap <leader>xx "+xx
+vmap cy "+yy
 
 " 帮助文档
 nnoremap <leader>h :vert help 
@@ -166,12 +197,15 @@ call plug#end()
 " }}}
 " ============================= 插件配置 =============================
 " {{{ Theme
-" autocmd vimenter * hi Normal guibg=NONE ctermbg=NONE
-" autocmd vimenter * hi EndOfBuffer guibg=NONE ctermbg=NONE
 " 设置VIM主题
 colorscheme OceanicNext
 set background=dark
 set termguicolors
+" 如果你需要vim透明背景，加入以下配置
+" hi Normal guibg=NONE ctermbg=NONE
+" hi LineNr guibg=NONE ctermbg=NONE
+" hi SignColumn guibg=NONE ctermbg=NONE
+" hi EndOfBuffer guibg=NONE ctermbg=NONE
 " }}}
 " {{{ Airline
 " 显示状态栏
@@ -189,8 +223,16 @@ let g:airline#extensions#coc#warning_symbol = '⚡ '
 
 let g:airline_powerline_fonts = 1
 
-nnoremap <leader>bn :bn<CR>
-nnoremap <leader>bp :bp<CR>
+nnoremap <leader>n :bn<CR>
+nnoremap <leader>p :bp<CR>
+nnoremap <leader>b1 :b1<CR>
+nnoremap <leader>b2 :b2<CR>
+nnoremap <leader>b3 :b3<CR>
+nnoremap <leader>b4 :b4<CR>
+nnoremap <leader>b5 :b5<CR>
+nnoremap <leader>b6 :b6<CR>
+nnoremap <leader>b7 :b7<CR>
+nnoremap <leader>b8 :b8<CR>
 " }}}
 " {{{ NERDTree
 let g:NERDSpaceDelims=1
@@ -311,6 +353,8 @@ let g:go_highlight_generate_tags = 1
 
 " 在:w时自动进行GoImports并重新执行GoFmt
 autocmd BufWriteCmd *.go call go#fmt#Format(1)
+" 在GoFmt失败时，忽略掉错误以避免文件无法正常写入
+autocmd FileType go call go#config#FmtFailSilently()
 
 " 代码块折叠功能
 autocmd FileType go call go#config#FoldEnable()
@@ -324,7 +368,7 @@ nnoremap gi  :GoImports<CR>
 nnoremap gfs :GoFillStruct<CR>
 " }}}
 " {{{ fzf
-let g:fzf_layout = { 'down': '50%' }
+let g:fzf_layout = { 'down': '30%' }
 " 按下C-/可以打开/关闭预览窗口
 " let g:fzf_preview_window = ['down:40%', 'ctrl-/']
 let g:fzf_preview_window = []
@@ -371,6 +415,7 @@ nnoremap <leader>sb :Buffers<CR>
 " {{{ Git
 " 打开Git Blame
 nnoremap <leader>gb :Git blame<CR>
+nnoremap <leader>gd :Gvdiffsplit<CR>
 " }}}
 " {{{ BufClean
 nnoremap <leader>bc :BufClean<CR>

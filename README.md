@@ -73,6 +73,7 @@ gfs|Normal|Go快速补全结构体
 {leader}sl|Normal|Rg搜索当前文件内容
 {leader}sb|Normal|搜索buffers
 {leader}gb|Normal|打开Git Blame
+{leader}gd|Normal|打开Git Diff
 {leader}bc|Normal|快速清理不用的buffer
 {leader}tw|Visual|翻译选中的英文为中文
 {leader}db|Normal|Go增加/移除调试断点
