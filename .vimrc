@@ -193,6 +193,9 @@ call plug#begin('~/.vim/plugged')
   " YAML 折叠
   Plug 'fioncat/vim-yaml-folds'
 
+  " 像vscode那样实时展示git blamer信息
+  Plug 'APZelos/blamer.nvim'
+
 call plug#end()
 " }}}
 " ============================= 插件配置 =============================
@@ -368,10 +371,7 @@ nnoremap gi  :GoImports<CR>
 nnoremap gfs :GoFillStruct<CR>
 " }}}
 " {{{ fzf
-let g:fzf_layout = { 'down': '30%' }
-" 按下C-/可以打开/关闭预览窗口
-" let g:fzf_preview_window = ['down:40%', 'ctrl-/']
-let g:fzf_preview_window = []
+let g:fzf_layout = { 'window': { 'width': 1.0, 'height': 0.6, 'relative': v:true, 'yoffset': 1.0 } }
 
 " fzf搜索框colors配置，让其符合当前主题
 let g:fzf_colors =
@@ -429,4 +429,12 @@ autocmd FileType go nnoremap <leader>dr :DlvToggleTracepoint<CR>
 autocmd FileType go nnoremap <leader>dc :DlvClearAll<CR>
 autocmd FileType go nnoremap <leader>dd :DlvDebug -- 
 autocmd FileType go nnoremap <leader>dt :DlvTest -- -test.run  
+" }}}
+" {{{ balmer
+let g:blamer_enabled = 1
+let g:blamer_delay = 3000
+let g:blamer_date_format = '%Y-%m-%d'
+let g:blamer_template = '<committer> • <committer-time>'
+let g:blamer_show_in_visual_modes = 0
+let g:blamer_show_in_insert_modes = 0
 " }}}
