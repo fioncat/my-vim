@@ -29,6 +29,7 @@
 [vim-surround](https://github.com/tpope/vim-surround)|快速增加围绕字符，例如括号或xml tag
 [vim-delve](https://github.com/sebdah/vim-delve)|Golang调试插件|需要[delve](https://github.com/go-delve/delve)
 [vim-yaml-folds](https://github.com/fioncat/vim-yaml-folds)|yaml文件折叠
+[blamer.nvim](https://github.com/APZelos/blamer.nvim)|像vscode那样实时展示git blamer信息
 
 ## Hot keys
 
