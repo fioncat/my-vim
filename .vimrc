@@ -371,7 +371,7 @@ nnoremap gi  :GoImports<CR>
 nnoremap gfs :GoFillStruct<CR>
 " }}}
 " {{{ fzf
-let g:fzf_layout = { 'window': { 'width': 1.0, 'height': 0.6, 'relative': v:true, 'yoffset': 1.0 } }
+let g:fzf_layout = { 'window': { 'width': 1.0, 'height': 0.6, 'relative': v:false, 'yoffset': 1.0 } }
 
 " fzf搜索框colors配置，让其符合当前主题
 let g:fzf_colors =
