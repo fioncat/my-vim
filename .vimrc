@@ -45,6 +45,8 @@ set splitbelow
 
 " 实时搜索，不必等按下<Enter>再进行搜索
 set incsearch
+" 搜索高亮
+set hlsearch
 
 " 搜索忽略大小写
 set ignorecase
@@ -102,10 +104,10 @@ set ttimeoutlen=0
 " 在Insert模式下，光标显示为长条
 let &t_SI = "\e[6 q"
 let &t_EI = "\e[2 q"
-augroup myCmds
-au!
-autocmd VimEnter * silent !echo -ne "\e[2 q"
-augroup END
+" augroup myCmds
+" au!
+" autocmd VimEnter * silent !echo -ne "\e[2 q"
+" augroup END
 
 " }}}
 " ============================= 基础快捷键 =============================
@@ -119,7 +121,7 @@ vmap <leader>xx "+xx
 vmap cy "+yy
 
 " 帮助文档
-nnoremap <leader>h :vert help 
+" nnoremap <leader>h :vert help 
 
 " 窗口控制快捷键
 " 垂直分屏
@@ -137,6 +139,8 @@ nnoremap <leader>" :vert ter<CR>
 tnoremap <C-N> <C-\><C-N>
 " 在内置Ternimal按下C-Q直接退出
 tnoremap <C-Q> exit<CR>
+
+nnoremap <leader>h :noh<CR>
 " }}}
 " ============================= 插件列表 =============================
 " {{{ plugs
@@ -195,6 +199,9 @@ call plug#begin('~/.vim/plugged')
 
   " 像vscode那样实时展示git blamer信息
   Plug 'APZelos/blamer.nvim'
+
+  " 展示搜索index
+  Plug 'google/vim-searchindex'
 
 call plug#end()
 " }}}

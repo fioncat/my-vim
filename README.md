@@ -41,7 +41,7 @@
 -----|-----|---
 {leader}yy|Visual|将选中内容复制到系统剪切板
 {leader}xx|Visual|将选中内容剪切到系统剪切板
-{leader}h|Normal|查看vim帮助文档
+{leader}h|Normal|取消搜索高亮
 {leader}w/|Normal|垂直拆分窗口
 {leader}w-|Normal|水平拆分窗口
 {leader}w[|Normal|微调垂直窗口尺寸
