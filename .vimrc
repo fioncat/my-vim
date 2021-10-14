@@ -328,6 +328,12 @@ function! s:show_documentation()
   endif
 endfunction
 
+" 在显示文档的时候，使用<C-j>, <C-k>来上下滚动
+nnoremap <nowait><expr> <C-j> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
+nnoremap <nowait><expr> <C-k> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
+inoremap <nowait><expr> <C-j> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(1)\<cr>" : "\<Right>"
+inoremap <nowait><expr> <C-k> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(0)\<cr>" : "\<Left>"
+
 " 高亮展示光标悬浮的引用
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
@@ -366,16 +372,23 @@ autocmd BufWriteCmd *.go call go#fmt#Format(1)
 " 在GoFmt失败时，忽略掉错误以避免文件无法正常写入
 autocmd FileType go call go#config#FmtFailSilently()
 
+" 对于go.mod文件使用gomod高亮
+au BufReadPost go.mod set syntax=gomod
+au BufReadPost go.sum set syntax=gosum
+
 " 代码块折叠功能
 autocmd FileType go call go#config#FoldEnable()
 autocmd FileType go setlocal foldmethod=syntax
 autocmd FileType go setlocal foldlevel=99  " 启动时不进行折叠，需要手动触发
 
+" 将高亮设置为GoTemplate
+nnoremap gtl :set syntax=gotexttmpl<CR>
+
 " 一些Go Tools
-nnoremap gat :GoAddTags 
-nnoremap grt :GoRemoveTags 
-nnoremap gi  :GoImports<CR>
-nnoremap gfs :GoFillStruct<CR>
+autocmd FileType go nnoremap gat :GoAddTags 
+autocmd FileType go nnoremap grt :GoRemoveTags 
+autocmd FileType go nnoremap gi  :GoImports<CR>
+autocmd FileType go nnoremap gfs :GoFillStruct<CR>
 " }}}
 " {{{ fzf
 let g:fzf_layout = { 'window': { 'width': 1.0, 'height': 0.6, 'relative': v:false, 'yoffset': 1.0 } }
