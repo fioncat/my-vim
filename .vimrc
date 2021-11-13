@@ -97,9 +97,19 @@ autocmd FileType json set tabstop=2
 autocmd FileType json set shiftwidth=2
 autocmd FileType json set expandtab
 
+autocmd FileType javascript set tabstop=2
+autocmd FileType javascript set shiftwidth=2
+autocmd FileType javascript set expandtab
+
+autocmd FileType typescriptreact set tabstop=2
+autocmd FileType typescriptreact set shiftwidth=2
+autocmd FileType typescriptreact set expandtab
 " 解决按下ESC延时进入InsertMode的问题
 set ttimeout
 set ttimeoutlen=0
+
+" 在css文件中，将'@'认为是关键词
+autocmd FileType scss setl iskeyword+=@-@
 
 " 在Insert模式下，光标显示为长条
 let &t_SI = "\e[6 q"
@@ -203,6 +213,10 @@ call plug#begin('~/.vim/plugged')
   " 展示搜索index
   Plug 'google/vim-searchindex'
 
+  Plug 'yuezk/vim-js'
+  Plug 'HerringtonDarkholme/yats.vim'
+  Plug 'maxmellon/vim-jsx-pretty'
+
 call plug#end()
 " }}}
 " ============================= 插件配置 =============================
@@ -212,10 +226,10 @@ colorscheme OceanicNext
 set background=dark
 set termguicolors
 " 如果你需要vim透明背景，加入以下配置
-" hi Normal guibg=NONE ctermbg=NONE
-" hi LineNr guibg=NONE ctermbg=NONE
-" hi SignColumn guibg=NONE ctermbg=NONE
-" hi EndOfBuffer guibg=NONE ctermbg=NONE
+hi Normal guibg=NONE ctermbg=NONE
+hi LineNr guibg=NONE ctermbg=NONE
+hi SignColumn guibg=NONE ctermbg=NONE
+hi EndOfBuffer guibg=NONE ctermbg=NONE
 " }}}
 " {{{ Airline
 " 显示状态栏
